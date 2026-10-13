@@ -1,0 +1,28 @@
+[Unit]
+Description=ServerEye — мониторинг доступности серверов в Telegram
+Documentation=https://github.com/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=servereye
+Group=servereye
+WorkingDirectory=/opt/servereye
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/servereye/.venv/bin/python -m servereye.main
+Restart=always
+RestartSec=10
+
+# Минимально необходимые права: боту не нужен доступ к чужим файлам
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/servereye
+
+[Install]
+WantedBy=multi-user.target

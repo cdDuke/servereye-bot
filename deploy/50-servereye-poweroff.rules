@@ -1,0 +1,13 @@
+// ServerEye: системному пользователю servereye разрешено ТОЛЬКО выключение.
+// Перезагрузка, сон, управление сервисами и прочее по-прежнему запрещены.
+polkit.addRule(function (action, subject) {
+    if (subject.user !== "servereye") {
+        return polkit.Result.NOT_HANDLED;
+    }
+    if (action.id === "org.freedesktop.login1.power-off" ||
+        action.id === "org.freedesktop.login1.power-off-multiple-sessions" ||
+        action.id === "org.freedesktop.login1.power-off-ignore-inhibit") {
+        return polkit.Result.YES;
+    }
+    return polkit.Result.NOT_HANDLED;
+});

@@ -1,0 +1,25 @@
+[Unit]
+Description=ServerEye Agent — сбор метрик нагрузки, температуры и питания
+After=network-online.target servereye.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=servereye
+Group=servereye
+WorkingDirectory=/opt/servereye
+Environment=PYTHONUNBUFFERED=1
+EnvironmentFile=/etc/servereye-agent.env
+ExecStart=/opt/servereye/.venv/bin/python /opt/servereye/servereye/agent/servereye_agent.py
+Restart=always
+RestartSec=15
+
+# Агенту не нужны привилегии: он только читает метрики
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target
